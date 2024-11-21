@@ -1,0 +1,33 @@
+services:
+  flask-webapp:
+    build:
+      context: ./flask_app
+    container_name: flask-webapp
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_APP: app.py
+      FLASK_RUN_HOST: 0.0.0.0
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: p@ssw0rd
+      MYSQL_DB: userdb
+    depends_on:
+      - db
+
+  db:
+    build: 
+      context: ./db
+    container_name: flask-db
+    environment:
+      MYSQL_ROOT_PASSWORD: p@ssw0rd
+      MYSQL_DATABASE: userdb
+      MYSQL_SSL_MODE: DISABLED
+
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
